@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Multi-purpose Room Status</title>
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+	<header><h2>LIB 030 - Multi-purpose Room<span id="time"></span></h2></header>
+	<section id="events">
+		<h2>Today's Events<span id="date"></h2>
+		<ul>
+		</ul>
+	</section>
+	<aside id="traffic">
+
+	</aside>
+	<script type="x-tmpl-mustache" id="event-template">
+		<li class='{{now}}'>
+			<div class='times'>
+				<span>{{TimeEventStart}}</span>
+				<span>{{TimeEventEnd}}</span>
+			</div>
+			<div class='title'>
+				<span>{{EventName}} - {{EventTypeDescription}}</span>
+			</div>
+		</li>
+	</script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="js/mustache.js"></script>
+	<script src="js/moment.js"></script>
+	<script src="js/scripts.js"></script>
+</body>
+</html>
