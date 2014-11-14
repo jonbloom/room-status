@@ -6,14 +6,15 @@
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
-	<header><h2>LIB 030 - Multi-purpose Room<span id="time"></span></h2></header>
-	<section id="events">
-		<h2>Today's Events<span id="date"></h2>
-		<ul>
-		</ul>
+	<header><h2>LIB 030 - Multi-purpose Room <span id="open-close"></span><span id="time"></span></h2>
+	</header>
+	<h2 id="events-header">Today's Events<span id="date"></h2>
+	<section id="events-container">
+		<ul></ul>
 	</section>
-	<aside id="traffic">
-
+	<aside id="traffic-container">
+	<h2>Current Traffic</h2>
+	<figure id="traffic-level"></figure>
 	</aside>
 	<script type="x-tmpl-mustache" id="event-template">
 		<li class='{{now}}'>
@@ -22,7 +23,7 @@
 				<span>{{TimeEventEnd}}</span>
 			</div>
 			<div class='title'>
-				<span>{{EventName}} - {{EventTypeDescription}}</span>
+				<span>{{EventName}}<br>{{GroupName}}</span>
 			</div>
 		</li>
 	</script>
