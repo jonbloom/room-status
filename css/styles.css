@@ -1,3 +1,15 @@
+@font-face {
+    font-family: 'AlternateGothic';
+    src: url('../fonts/AlternateGothicNo3-webfont.eot');
+    src: url('../fonts/AlternateGothicNo3-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/AlternateGothicNo3-webfont.woff') format('woff'),
+    url('../fonts/AlternateGothicNo3-webfont.ttf') format('truetype'),
+    url('../fonts/AlternateGothicNo3-webfont.svg#AlternateGothicFSNo3') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 body {
 	font-family: Helvetica, Arial;
 	background-color: #88b3da;
@@ -29,6 +41,12 @@ body {
     margin: 60px 0 0 35px;
     padding-top: 125px;
 }
+
+#traffic-container #open-close {
+    font-family: 'AlternateGothic', Arial, sans-serif;
+    font-size: 50px;
+    font-style: italic;
+}
 .empty, .low {
     background-color: #6c6;
     color: #222;
@@ -48,18 +66,11 @@ body {
     background-color: #c00;
     color: #fff;
 }
-
-@font-face {
-    font-family: 'AlternateGothic';
-    src: url('../fonts/AlternateGothicNo3-webfont.eot');
-    src: url('../fonts/AlternateGothicNo3-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/AlternateGothicNo3-webfont.woff') format('woff'),
-    url('../fonts/AlternateGothicNo3-webfont.ttf') format('truetype'),
-    url('../fonts/AlternateGothicNo3-webfont.svg#AlternateGothicFSNo3') format('svg');
-    font-weight: normal;
-    font-style: normal;
-
+.event {
+    background-color: #5525bf;
+    color: #FFF;
 }
+
 
 h2 {
 	background-color: #004875;
@@ -83,6 +94,13 @@ h2 {
 
 #events-container {
     float: left;
+}
+
+#events-container #none{
+    color: white;
+    font-size: 40px;
+    font-style: italic;
+    padding: 10px;
 }
 
 #events-container ul li {

@@ -18,7 +18,7 @@ function init(){
 		return this.replace(/\w\S*/g, function(txt){
 			return txt.charAt(0).toUpperCase() + txt.substr(1);
 		});
-};
+	};
 
 }
 
@@ -46,6 +46,10 @@ function getTrafficByDatabaseID(id){
 
 	function processData(data){
 		var css, label, level = parseInt(data[id]);
+		var $traffic = jQuery('#traffic-level');
+		if ($traffic.hasClass('event')){
+			return;
+		}
 		switch(level) {
 			case 1:
 				label = 'Full';
@@ -69,10 +73,10 @@ function getTrafficByDatabaseID(id){
 				break;
 			case 6:
 				label = 'Event';
-				css = 'full';
+				css = 'event';
 				break;
 		}
-		jQuery('#traffic-level').addClass(css).html(label);
+		$traffic.addClass(css).html(label);
 
 	}
 }
@@ -93,11 +97,11 @@ function updateEventsByEmsID(id){
 
 	});
 	function processData(data){
-		var inFormat = "HH:mm:ss";
 	    var outFormat = "h:mm A";
 	    var template = jQuery('#event-template').html();
 	    var eventsList = jQuery('#events-container ul');
-	    eventsList.find("li").remove();
+	    var eventNow = false;
+	    eventsList.find("li").not('#none').remove();
 	    Mustache.parse(template);
 		data = data.Data //api's root element is "Data", and we want everything in there
 		var events = []
@@ -106,23 +110,42 @@ function updateEventsByEmsID(id){
 		} else {
 			events = data;
 		}
-		console.log(events);
-		for (var i = 0; i < events.length; i++){
-			var ev = events[i];
-			if (moment().isAfter(moment(ev.TimeEventEnd))){ //event has already happened
-				continue;
+		var now = moment();
+		if (events){
+			jQuery("#none").hide();
+			for (var i = 0; i < events.length; i++){
+				var ev = events[i];
+				if (now.isAfter(moment(ev.TimeEventStart))
+				 && now.isBefore(moment(ev.TimeEventEnd))){
+					eventNow = true;
+				}
+
+				if (now.isAfter(moment(ev.TimeEventEnd))){ //event has already happened
+					continue;
+				}
+		        ev.TimeEventStart = moment(ev.TimeEventStart).format(outFormat);
+		        ev.TimeEventEnd = moment(ev.TimeEventEnd).format(outFormat);
+		        ev.EventName = ev.EventName.toProperCase();
+		        var renderedTemplate = Mustache.render(template,ev);
+		        eventsList.append(renderedTemplate);
 			}
-	        ev.TimeEventStart = moment(ev.TimeEventStart).format(outFormat);
-	        ev.TimeEventEnd = moment(ev.TimeEventEnd).format(outFormat);
-	        ev.EventName = ev.EventName.toProperCase();
-	        var renderedTemplate = Mustache.render(template,ev);
-	        eventsList.append(renderedTemplate);
+			sortEventsList(eventsList);
+			if (eventNow){
+				jQuery('#traffic-level').removeClass().addClass('event').html('Event');
+				jQuery('#open-close').removeClass().addClass('closed').html('(Closed)');
+			} else {
+				jQuery('#traffic-level').removeClass('event');
+				jQuery('#open-close').removeClass().addClass('open').html('(Open)');
+			}
+		} else {
+			jQuery("#none").show();
 		}
-		sortEventsList(eventsList);
+
 	}
 	function sortEventsList(eventsList){
 		var toCompare = eventsList.find('li');
 		toCompare.sort(sort);
+
 		function sort(a,b){
 			a = jQuery(a);
 			b = jQuery(b);
@@ -130,11 +153,7 @@ function updateEventsByEmsID(id){
 			var bStart = b.find('div.times span').get(0).innerHTML;
 
 			var compare = moment(aStart,"h:mm A").isAfter(moment(bStart,"h:mm A"));
-			if (compare){
-				return 1;
-			} else {
-				return -1;
-			}
+			return compare ? 1 : -1;
 		}
 		toCompare.detach().appendTo(eventsList);
 	}
