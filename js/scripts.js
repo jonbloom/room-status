@@ -112,7 +112,7 @@ function updateEventsByEmsID(id){
 		}
 		var now = moment();
 		if (events){
-			jQuery("#none").hide();
+			
 			for (var i = 0; i < events.length; i++){
 				var ev = events[i];
 				if (now.isAfter(moment(ev.TimeEventStart))
@@ -123,6 +123,7 @@ function updateEventsByEmsID(id){
 				if (now.isAfter(moment(ev.TimeEventEnd))){ //event has already happened
 					continue;
 				}
+				jQuery("#none").hide();
 		        ev.TimeEventStart = moment(ev.TimeEventStart).format(outFormat);
 		        ev.TimeEventEnd = moment(ev.TimeEventEnd).format(outFormat);
 		        ev.EventName = ev.EventName.toProperCase();
@@ -132,10 +133,10 @@ function updateEventsByEmsID(id){
 			sortEventsList(eventsList);
 			if (eventNow){
 				jQuery('#traffic-level').removeClass().addClass('event').html('Event');
-				jQuery('#open-close').removeClass().addClass('closed').html('(Closed)');
+				jQuery('#open-close').removeClass().addClass('closed').html('Closed');
 			} else {
 				jQuery('#traffic-level').removeClass('event');
-				jQuery('#open-close').removeClass().addClass('open').html('(Open)');
+				jQuery('#open-close').removeClass().addClass('open').html('Open');
 			}
 		} else {
 			jQuery("#none").show();
