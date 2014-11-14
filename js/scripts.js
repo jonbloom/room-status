@@ -67,6 +67,10 @@ function getTrafficByDatabaseID(id){
 				label = 'Empty';
 				css = 'low';
 				break;
+			case 6:
+				label = 'Event';
+				css = 'full';
+				break;
 		}
 		jQuery('#traffic-level').addClass(css).html(label);
 
