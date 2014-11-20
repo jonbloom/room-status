@@ -145,7 +145,9 @@ function updateEventsByEmsID(id){
 	}
 	function sortEventsList(eventsList){
 		var toCompare = eventsList.find('li');
-		toCompare.sort(sort);
+		if (toCompare.length > 0){
+			toCompare.sort(sort);
+		}
 
 		function sort(a,b){
 			a = jQuery(a);

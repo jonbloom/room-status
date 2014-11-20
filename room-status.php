@@ -12,7 +12,7 @@ function getRoomTrafficByDatabaseID($id){
 	    "SELECT MAX(entryID) ".
 	    "FROM entries )" .
 	" AND space = $id;";
-
+	$level = array();
     $level[$id] = $db->query($query)->fetch_row()[0];
     return json_encode($level);
 }
