@@ -13,7 +13,9 @@ function getRoomTrafficByDatabaseID($id){
 	    "FROM entries )" .
 	" AND space = $id;";
 	$level = array();
-    $level[$id] = $db->query($query)->fetch_row()[0];
+    $level[$id] = $db->query($query);
+    $level[$id] = $level[$id]->fetch_row();
+    $level[$id] = $level[$id][0];
     return json_encode($level);
 }
 
