@@ -37,11 +37,5 @@ function getRoomReservationsByEmsID($id){
     return json_encode($xml);
 }
 
-if (isset($_POST)){
-	if ($_POST['data'] == 'traffic'){
-		echo getRoomTrafficByDatabaseID($_POST['id']);
-	} else if ($_POST['data'] == 'events'){
-		echo getRoomReservationsByEmsID($_POST['id']);
-	}
-}
+getRoomTrafficByDatabaseID(2);
 ?>
