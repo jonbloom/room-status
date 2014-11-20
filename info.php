@@ -14,10 +14,10 @@ function getRoomTrafficByDatabaseID($id){
 	" AND space = $id;";
 
 	$level = array();
-	echo 'level = array();\n';
+	echo 'level = array();';
 	var_dump($level);
     $level[$id] = $db->query($query);
-    echo "\n\n".'\n\n$level[$id] = $db->query($query);';
+    echo "\n\n".'$level[$id] = $db->query($query);';
     var_dump($leve);
     $level[$id] = $level[$id]->fetch_row();
     echo "\n\n".'$level[$id] = $level[$id]->fetch_row();';
