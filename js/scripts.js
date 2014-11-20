@@ -144,7 +144,7 @@ function updateEventsByEmsID(id){
 
 	}
 	function sortEventsList(eventsList){
-		var toCompare = eventsList.find('li');
+		var toCompare = eventsList.find('li').not("#none");
 		if (toCompare.length > 0){
 			toCompare.sort(sort);
 		}
