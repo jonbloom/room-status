@@ -73,7 +73,7 @@ function getTrafficByDatabaseID(id){
 				break;
 			case 6:
 				label = 'Event';
-				css = 'event';
+				css = 'event event-traffic';
 				break;
 		}
 		$traffic.addClass(css).html(label);
@@ -135,7 +135,9 @@ function updateEventsByEmsID(id){
 				jQuery('#traffic-level').removeClass().addClass('event').html('Event');
 				jQuery('#open-close').removeClass().addClass('closed').html('Closed');
 			} else {
-				jQuery('#traffic-level').removeClass('event');
+				if (!jQuery('#traffic-level').hasClass('event-traffic')){
+					jQuery('#traffic-level').removeClass('event');
+				}
 				jQuery('#open-close').removeClass().addClass('open').html('Open');
 			}
 		} else {

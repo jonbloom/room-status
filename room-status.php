@@ -5,17 +5,17 @@ $db = new mysqli($db_host, $db_user, $db_pass, $db_database);
 
 function getRoomTrafficByDatabaseID($id){
 	global $db;
-	$query = 
-	" SELECT level" . 
-	" FROM traffic " .
-	" WHERE entryID = (" . 
-	    "SELECT MAX(entryID) ".
-	    "FROM entries )" .
-	" AND space = $id;";
+	$query = "
+	SELECT level
+	 FROM traffic 
+	 WHERE entryID = (
+	 	SELECT MAX(entryID) 
+		FROM entries )
+	 AND space = $id;";
 	$level = array();
-    $level[$id] = $db->query($query);
-    $level[$id] = $level[$id]->fetch_row();
-    $level[$id] = $level[$id][0];
+    $dbResult = $db->query($query);
+    $row = $dbResult->fetch_row();
+    $level[$id] = $row[0];
     return json_encode($level);
 }
 
