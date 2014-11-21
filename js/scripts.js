@@ -6,13 +6,13 @@ function init(){
 
 	var emsID = 7681;
 	var dbID = 2;
+	setInterval(updateTime,1 * seconds);
+	if (multipurpose){
+		setInterval(updateEventsByEmsID(emsID), 5 * minutes);
+		setInterval(getTrafficByDatabaseID(dbID), 5 * minutes);
+	}
+	
 
-	updateEventsByEmsID(emsID);
-	updateTime();
-	getTrafficByDatabaseID(dbID);
-
-	setInterval(updateEventsByEmsID(emsID), 5 * minutes);
-	setInterval(updateTime,10 * seconds);
 
 	String.prototype.toProperCase = function () {
 		return this.replace(/\w\S*/g, function(txt){

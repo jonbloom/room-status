@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Room Status</title>
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/select2.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	
+</head>
+<body>
+	<header>
+	<select id='room-picker'>
+	<option value="7678">LIB 003 - Media Prep Room</option>
+    <option value="7679">LIB 004 - Media Prep Room</option>
+    <option value="7680">LIB 005 - Media Prep Room</option>
+    <option value="7681">LIB 030 - Multi-Purpose Room</option>
+    <option value="7686">LIB 133 - Playback</option>
+    <option value="7687">LIB 134 - Presentation Practice</option>
+    <option value="7688">LIB 135 - Presentation Practice</option>
+    <option value="7689">LIB 202 - Conference Style</option>
+    <option value="7690">LIB 203 - Conference Style</option>
+    <option value="7801">LIB 204 - Lounge Style</option>
+    <option value="7691">LIB 205 - Conference Style</option>
+    <option value="7692">LIB 216 - Seminar Room</option>
+    <option value="7693">LIB 302 - Conference Style</option>
+    <option value="7694">LIB 303 - Lounge Style</option>
+    <option value="7696">LIB 305 - Conference Style</option>
+    <option value="7698">LIB 404 - Conference Style</option>
+    <option value="7699">LIB 405 - Conference Style</option>
+	</select>
+	</header>
+	<h2 id="events-header">Today's Events<span id="date"></span></h2>
+	<section id="events-container">
+		<ul>
+			<li id="none">No Events Currently Scheduled</li>
+		</ul>
+	</section>
+	<script type="x-tmpl-mustache" id="event-template">
+		<li class='{{now}}'>
+			<div class='times'>
+				<span>{{TimeEventStart}}</span>
+				<span>{{TimeEventEnd}}</span>
+			</div>
+			<div class='title'>
+				<span>{{EventName}}<br>{{GroupName}}</span>
+			</div>
+		</li>
+	</script>
+	<script type="x-tmpl-mustache" id="room-title"></script>
+		
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="js/mustache.js"></script>
+	<script src="js/moment.js"></script>
+	<script src="js/select2.js"></script>
+	<script src="js/scripts.js"></script>
+	<script>
+	var multipurpose = false;
+	
+	jQuery('select').change(function(){
+		updateEventsByEmsID(this.value);
+	});
+	jQuery('select').trigger('change').select2();
+	</script>
+</body>
+</html>
