@@ -82,6 +82,46 @@ h2 {
 	color: #fff;
 }
 
+.select2-container, .select2-drop, .select2-search, .select2-container .select2-choice{
+    background: #004875;
+    font-size: 30px;
+    font-family: 'AlternateGothic', Arial, sans-serif;
+    color: #fff;
+    border: none !important;
+    width: 100%;
+    -webkit-box-shadow: none;
+    overflow: visible;
+    padding: 5px;
+    padding-right: 10px
+}
+
+.select2-container .select2-choice .select2-arrow{
+    background: none;
+    border: none;
+}
+
+.select2-dropdown-open .select2-choice .select2-arrow{
+    background: none;
+    border: none;
+}
+
+.select2-dropdown-open .select2-choice .select2-arrow:before{
+    content: '\25B4';
+}
+.select2-container .select2-choice .select2-arrow b:before {
+content: '\25BE';
+}
+
+
+.select2-search{
+    font-size: 12px;
+    width: 99%;
+    margin-left: 10px;
+}
+.select2-results .select2-no-results{
+    background: #004875;
+}
+
 .open{
     color: #5bff4d;
 }
