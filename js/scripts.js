@@ -101,6 +101,7 @@ function updateEventsByEmsID(id){
 	    var template = jQuery('#event-template').html();
 	    var eventsList = jQuery('#events-container ul');
 	    var eventNow = false;
+	    var eventTitlesToIgnoreForTraffic = ['Exam Cram'];
 	    eventsList.find("li").not('#none').remove();
 	    Mustache.parse(template);
 		data = data.Data //api's root element is "Data", and we want everything in there
@@ -112,6 +113,7 @@ function updateEventsByEmsID(id){
 		}
 		var now = moment();
 		if (events){
+			var ignoreEventForTraffic = false;
 			
 			for (var i = 0; i < events.length; i++){
 				var ev = events[i];
@@ -127,11 +129,14 @@ function updateEventsByEmsID(id){
 		        ev.TimeEventStart = moment(ev.TimeEventStart).format(outFormat);
 		        ev.TimeEventEnd = moment(ev.TimeEventEnd).format(outFormat);
 		        ev.EventName = ev.EventName.toProperCase();
+		        if (eventTitlesToIgnoreForTraffic.indexOf(ev.EventName) > -1){
+		        	ignoreEventForTraffic = true;
+		        }
 		        var renderedTemplate = Mustache.render(template,ev);
 		        eventsList.append(renderedTemplate);
 			}
 			sortEventsList(eventsList);
-			if (eventNow){
+			if (eventNow && !ignoreEventForTraffic){
 				jQuery('#traffic-level').removeClass().addClass('event').html('Event');
 				jQuery('#open-close').removeClass().addClass('closed').html('Closed');
 			} else {
