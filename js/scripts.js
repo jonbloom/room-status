@@ -97,6 +97,9 @@ function updateEventsByEmsID(id){
 
 	});
 	function processData(data){
+		if (jQuery.isEmptyObject(data)){
+			return;
+		}
 	    var outFormat = "h:mm A";
 	    var template = jQuery('#event-template').html();
 	    var eventsList = jQuery('#events-container ul');
