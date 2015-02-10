@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>This Week's Library Events</title>
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<meta http-equiv="refresh" content="300">
+</head>
+<body>
+	<header><h2>This Week in the Library<span id="time"></span></h2>
+	</header>
+	<h2 id="events-header">All Events in LIB 030<span id="date"></h2>
+	<section id="events-container">
+		<ul>
+			<li id="none">No Events Currently Scheduled</li>
+		</ul>
+	</section>
+	<script type="x-tmpl-mustache" id="event-template">
+		<li class='{{now}}'>
+			<div class='times'>
+				<span class="date">{{date}}</span>
+			</div>
+			<div class='title'>
+				<span>{{EventName}}<br>
+				{{TimeEventStart}} - {{TimeEventEnd}}</span>
+			</div>
+		</li>
+	</script>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="js/mustache.js"></script>
+	<script src="js/moment.js"></script>
+	<script src="js/scripts.js"></script>
+	<script>
+		var multipurpose = false;
+		function updateEventsByEmsIDForWeek(id){
+			var cacheBuster = new Date().getTime();
+
+			jQuery.ajax({
+				url: 'room-status.php',
+				method: 'POST',
+				dataType: 'json',
+				data: {
+					data: 'week',
+					id: id,
+					cacheBuster: cacheBuster
+				},
+				success: processData
+
+			});
+			function processData(data){
+				if (jQuery.isEmptyObject(data)){
+					return;
+				};
+				var outFormat = "h:mm A";
+				var dateFormat = 'ddd MMM D';
+
+				var template = jQuery('#event-template').html();
+				var eventsList = jQuery('#events-container ul');
+				eventsList.find('li').not('#none').remove();
+				Mustache.parse(template);
+				data = data.Data //api's root element is "Data", and we want everything in there
+				var events = []
+				if (Object.prototype.toString.call(data) !== "[object Array]"){ // one reservation, we'll have to coerce it into a list
+					events[0] = data;
+				} else {
+					events = data;
+				}
+				var now = moment();
+				var lastDay = moment();
+				if (events)
+					jQuery('#none').hide();
+					for (var i = 0; i < events.length; i++){
+						ev = events[i];
+						if (i!=0 && moment(ev.TimeEventStart).format('ddd') == lastDay.format('ddd')){
+							ev.date = '';
+						} else {
+							while (i!=0 && lastDay.clone().add(1, 'days').format('ddd') != moment(ev.TimeEventStart).format('ddd')){
+								var dummy = {
+									date : lastDay.add(1,'days').format(dateFormat),
+									EventName: 'None',
+									TimeEventStart: '',
+									TimeEventEnd: ''
+								}
+								eventsList.append(Mustache.render(template,dummy));
+							}
+							ev.date = moment(ev.TimeEventStart).format(dateFormat);
+							lastDay = moment(ev.TimeEventStart);
+						}
+						ev.TimeEventStart = moment(ev.TimeEventStart).format(outFormat);
+						ev.TimeEventEnd = moment(ev.TimeEventEnd).format(outFormat);
+						ev.EventName = ev.EventName.toProperCase();
+						eventsList.append(Mustache.render(template,ev));
+					}
+				}
+			}
+			updateEventsByEmsIDForWeek(7681);
+	</script>
+</body>
+</html>

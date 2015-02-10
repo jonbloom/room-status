@@ -159,8 +159,11 @@ content: '\25BE';
 #events-container ul li div.times {
     font-style: italic;
     text-align: right;
-    border-right: 10px solid white;
+    /*border-right: 10px solid white;*/
     min-width: 190px;
+}
+#events-container ul li div.title {
+    border-left: 10px solid white;
 }
 #events-container ul li div span {
     display: block;

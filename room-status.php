@@ -13,6 +13,7 @@ function checkIP(){
     $ip = explode(".",$ip);
     if (!(
         ($ip[0] == "::1") ||
+	($ip[0] == "127" && $ip[1] == "0" && $ip[2] == "0" && $ip[3] == "1") ||
         ($ip[0] == "148" && $ip[1] == "61") ||
         ($ip[0] == "35" && $ip[1] == "40") ||
         ($ip[0] == "207" && $ip[1] == "72" &&
@@ -50,11 +51,25 @@ function getRoomReservationsByEmsID($id){
     return json_encode($xml);
 }
 
+function getRoomReservationsForWeekByEmsId($id){
+    $today = new dateTime();
+    $plusSeven = new dateTime();
+    $plusSeven->modify('+1 week');
+    $today = $today->format('Y-m-d');
+    $plusSeven = $plusSeven->format('Y-m-d');
+    $url = 'http://gvsu.edu/reserve/files/cfc/functions.cfc?method=bookings&roomId='.$id.'&startDate='.$today.'&endDate='.$plusSeven.'';
+    $xml = simplexml_load_string(file_get_contents($url));
+    return json_encode($xml);
+
+}
+
 if (isset($_POST)){
 	if ($_POST['data'] == 'traffic'){
 		echo getRoomTrafficByDatabaseID($_POST['id']);
 	} else if ($_POST['data'] == 'events'){
 		echo getRoomReservationsByEmsID($_POST['id']);
-	}
+	} else if ($_POST['data'] == 'week'){
+        echo getRoomReservationsForWeekByEmsId($_POST['id']);
+    }
 }
 ?>
