@@ -33,7 +33,7 @@
 	<script src="js/scripts.js"></script>
 	<script>
 		var multipurpose = false;
-		function updateEventsByEmsIDForWeek(id){
+		function updateEventsForWeek(){
 			var cacheBuster = new Date().getTime();
 
 			jQuery.ajax({
@@ -42,7 +42,7 @@
 				dataType: 'json',
 				data: {
 					data: 'week',
-					id: id,
+					id: 7681,
 					cacheBuster: cacheBuster
 				},
 				success: processData
@@ -94,7 +94,8 @@
 					}
 				}
 			}
-			updateEventsByEmsIDForWeek(7681);
+			updateEventsByEmsIDForWeek();
+			setInterval(updateEventsForWeek,10000);
 	</script>
 </body>
 </html>
