@@ -9,7 +9,7 @@
 <body>
 	<header><h2>This Week in the Library<span id="time"></span></h2>
 	</header>
-	<h2 id="events-header">All Events in LIB 030<span id="date"></h2>
+	<h2 id="events-header">All Events in LIB 030 - Multipurpose Room<span id="date"></h2>
 	<section id="events-container">
 		<ul>
 			<li id="none">No Events Currently Scheduled</li>
@@ -30,7 +30,6 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="js/mustache.js"></script>
 	<script src="js/moment.js"></script>
-	<script src="js/scripts.js"></script>
 	<script>
 		var multipurpose = false;
 		function updateEventsForWeek(){
@@ -49,16 +48,27 @@
 
 			});
 			function processData(data){
-				if (jQuery.isEmptyObject(data)){
-					return;
-				};
-				var outFormat = "h:mm A";
-				var dateFormat = 'ddd MMM D';
-
 				var template = jQuery('#event-template').html();
 				var eventsList = jQuery('#events-container ul');
-				eventsList.find('li').not('#none').remove();
+				var outFormat = "h:mm A";
+				var dateFormat = 'ddd MMM D';
 				Mustache.parse(template);
+				var now = moment();
+				var lastDay = now.clone();
+				
+				if (jQuery.isEmptyObject(data)){
+					for (var i = 0; i < 7; i++){
+						var dummy = {
+									date : lastDay.format(dateFormat),
+									EventName: 'None',
+									TimeEventStart: '',
+									TimeEventEnd: ''
+								}
+								lastDay.add(1,'days');
+								eventsList.append(Mustache.render(template,dummy));
+					}
+				};
+
 				data = data.Data //api's root element is "Data", and we want everything in there
 				var events = []
 				if (Object.prototype.toString.call(data) !== "[object Array]"){ // one reservation, we'll have to coerce it into a list
@@ -66,25 +76,16 @@
 				} else {
 					events = data;
 				}
-				var now = moment();
-				var lastDay = now.clone();
-				if (events)
+				if (events){
 					jQuery('#none').hide();
 					for (var i = 0; i < events.length; i++){
 						ev = events[i];
+						if (ev.EventTypeDescription == 'Private Use'){
+							continue;
+						}
 						if (i!=0 && moment(ev.TimeEventStart).format('ddd') == lastDay.format('ddd')){
 							ev.date = '';
 						} else {
-							while (lastDay.clone().add(1, 'days').format('ddd') != moment(ev.TimeEventStart).format('ddd')){
-								var dummy = {
-									date : lastDay.format(dateFormat),
-									EventName: 'None',
-									TimeEventStart: '',
-									TimeEventEnd: ''
-								}
-								lastDat.add(1,'days');
-								eventsList.append(Mustache.render(template,dummy));
-							}
 							ev.date = moment(ev.TimeEventStart).format(dateFormat);
 							lastDay = moment(ev.TimeEventStart);
 						}
@@ -93,9 +94,14 @@
 						ev.EventName = ev.EventName.toProperCase();
 						eventsList.append(Mustache.render(template,ev));
 					}
+				} else {
+					jQuery('#none').show();
 				}
 			}
-			jQuery(document).ready(updateEventsForWeek);
+		}
+		updateEventsForWeek();
 	</script>
+	<script src="js/scripts.js"></script>
+	
 </body>
 </html>
