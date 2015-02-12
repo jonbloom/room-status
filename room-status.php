@@ -60,7 +60,6 @@ function getRoomReservationsForWeekByEmsId($id){
     $url = 'http://gvsu.edu/reserve/files/cfc/functions.cfc?method=bookings&roomId='.$id.'&startDate='.$today.'&endDate='.$plusSeven.'';
     $xml = simplexml_load_string(file_get_contents($url));
     return json_encode($xml);
-
 }
 
 if (isset($_POST)){
@@ -69,7 +68,7 @@ if (isset($_POST)){
 	} else if ($_POST['data'] == 'events'){
 		echo getRoomReservationsByEmsID($_POST['id']);
 	} else if ($_POST['data'] == 'week'){
-        echo getRoomReservationsForWeekByEmsId($_POST['id']);
+        echo getRoomReservationsForWeekByEmsId(7681);
     }
 }
 ?>

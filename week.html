@@ -42,7 +42,7 @@
 				dataType: 'json',
 				data: {
 					data: 'week',
-					id: 7681,
+					id: '7681',
 					cacheBuster: cacheBuster
 				},
 				success: processData
@@ -67,7 +67,7 @@
 					events = data;
 				}
 				var now = moment();
-				var lastDay = moment();
+				var lastDay = now.clone();
 				if (events)
 					jQuery('#none').hide();
 					for (var i = 0; i < events.length; i++){
@@ -75,13 +75,14 @@
 						if (i!=0 && moment(ev.TimeEventStart).format('ddd') == lastDay.format('ddd')){
 							ev.date = '';
 						} else {
-							while (i!=0 && lastDay.clone().add(1, 'days').format('ddd') != moment(ev.TimeEventStart).format('ddd')){
+							while (lastDay.clone().add(1, 'days').format('ddd') != moment(ev.TimeEventStart).format('ddd')){
 								var dummy = {
-									date : lastDay.add(1,'days').format(dateFormat),
+									date : lastDay.format(dateFormat),
 									EventName: 'None',
 									TimeEventStart: '',
 									TimeEventEnd: ''
 								}
+								lastDat.add(1,'days');
 								eventsList.append(Mustache.render(template,dummy));
 							}
 							ev.date = moment(ev.TimeEventStart).format(dateFormat);
@@ -94,8 +95,7 @@
 					}
 				}
 			}
-			updateEventsByEmsIDForWeek();
-			setInterval(updateEventsForWeek,10000);
+			jQuery(document).ready(updateEventsForWeek);
 	</script>
 </body>
 </html>
