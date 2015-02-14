@@ -24,7 +24,7 @@ function checkIP(){
         die();
     }
 }
-checkIP();
+//checkIP();
 
 function getRoomTrafficByDatabaseID($id){
 	global $db;

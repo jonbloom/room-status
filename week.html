@@ -80,7 +80,7 @@
 					jQuery('#none').hide();
 					for (var i = 0; i < events.length; i++){
 						ev = events[i];
-						if (ev.EventTypeDescription == 'Private Use'){
+						if (ev.EventTypeDescription == 'Private Use' || ev.StatusID == '1005'){
 							continue;
 						}
 						if (i!=0 && moment(ev.TimeEventStart).format('ddd') == lastDay.format('ddd')){
