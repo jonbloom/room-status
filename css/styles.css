@@ -146,21 +146,19 @@ content: '\25BE';
 }
 
 #events-container ul li {
-    font-size: 35px;
+    font-size: 55px;
     display: block;
-    padding-bottom: 90px;
 }
 
 #events-container ul li div {
     display: inline-block;
-    float: left;
     padding: 10px;
 }
 #events-container ul li div.times {
     font-style: italic;
     text-align: right;
     /*border-right: 10px solid white;*/
-    min-width: 190px;
+    min-width: 230px;
 }
 #events-container ul li div.title {
     border-left: 10px solid white;

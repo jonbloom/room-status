@@ -151,9 +151,9 @@ function updateEventsByEmsID(id){
 		} else {
 			jQuery("#none").show();
 		}
-
 	}
-	function sortEventsList(eventsList){
+}
+function sortEventsList(eventsList){
 		var toCompare = eventsList.find('li').not("#none");
 		if (toCompare.length > 0){
 			toCompare.sort(sort);
@@ -170,4 +170,3 @@ function updateEventsByEmsID(id){
 		}
 		toCompare.detach().appendTo(eventsList);
 	}
-}
