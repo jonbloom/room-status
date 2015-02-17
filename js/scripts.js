@@ -104,7 +104,7 @@ function updateEventsByEmsID(id){
 	    var template = jQuery('#event-template').html();
 	    var eventsList = jQuery('#events-container ul');
 	    var eventNow = false;
-	    var eventTitlesToIgnoreForTraffic = ['Exam Cram'];
+	    var eventTitlesToIgnoreForTraffic = ['Exam Cram', 'Mid Terms - Open For Student Study'];
 	    eventsList.find("li").not('#none').remove();
 	    Mustache.parse(template);
 		data = data.Data //api's root element is "Data", and we want everything in there
