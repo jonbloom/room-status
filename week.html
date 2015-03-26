@@ -16,92 +16,126 @@
 		</ul>
 	</section>
 	<script type="x-tmpl-mustache" id="event-template">
-		<li class='{{now}}'>
+		<li class='{{now}}' data-day='{{day}}' data-time='{{TimeEventStart}}'>
 			<div class='times'>
-				<span class="date">{{date}}</span>
+				<span class="date">{{daylist}}<br />{{date}}</span>
 			</div>
 			<div class='title'>
 				<span>{{EventName}}<br>
-				{{TimeEventStart}} - {{TimeEventEnd}}</span>
-			</div>
-		</li>
-	</script>
+					{{TimeEventStart}} - {{TimeEventEnd}}</span>
+				</div>
+			</li>
+		</script>
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script src="js/mustache.js"></script>
-	<script src="js/moment.js"></script>
-	<script>
-		var multipurpose = false;
-		function updateEventsForWeek(){
-			var cacheBuster = new Date().getTime();
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="js/mustache.js"></script>
+		<script src="js/moment.js"></script>
+		<script src="js/scripts.js"></script>
+		<script src="js/jquery.swap.js"></script>
+		<script>
+			var multipurpose = false;
+			function updateEventsForWeek(){
+				var cacheBuster = new Date().getTime();
 
-			jQuery.ajax({
-				url: 'room-status.php',
-				method: 'POST',
-				dataType: 'json',
-				data: {
-					data: 'week',
-					id: '7681',
-					cacheBuster: cacheBuster
-				},
-				success: processData
+				jQuery.ajax({
+					url: 'room-status.php',
+					method: 'POST',
+					dataType: 'json',
+					data: {
+						data: 'week',
+						id: '7681',
+						cacheBuster: cacheBuster
+					},
+					success: processData
 
-			});
-			function processData(data){
-				var template = jQuery('#event-template').html();
-				var eventsList = jQuery('#events-container ul');
-				var outFormat = "h:mm A";
-				var dateFormat = 'ddd MMM D';
-				Mustache.parse(template);
-				var now = moment();
-				var lastDay = now.clone();
-				
-				if (jQuery.isEmptyObject(data)){
-					for (var i = 0; i < 7; i++){
-						var dummy = {
-									date : lastDay.format(dateFormat),
-									EventName: 'None',
-									TimeEventStart: '',
-									TimeEventEnd: ''
-								}
-								lastDay.add(1,'days');
-								eventsList.append(Mustache.render(template,dummy));
-					}
-				};
+				});
+				function processData(data){
+					var template = jQuery('#event-template').html();
+					var eventsList = jQuery('#events-container ul');
+					var outFormat = "h:mm A";
+					var dateFormat = 'MMM D';
+					Mustache.parse(template);
+					var now = moment();
+					var lastDay = now.clone();
+					var numEvents = 0;
+
+					if (jQuery.isEmptyObject(data)){
+						for (var i = 0; i < 7; i++){
+							var dummy = {
+								date : lastDay.format(dateFormat),
+								EventName: 'None',
+								TimeEventStart: '',
+								TimeEventEnd: ''
+							}
+							lastDay.add(1,'days');
+							eventsList.append(Mustache.render(template,dummy));
+						}
+					};
 
 				data = data.Data //api's root element is "Data", and we want everything in there
 				var events = []
 				if (Object.prototype.toString.call(data) !== "[object Array]"){ // one reservation, we'll have to coerce it into a list
 					events[0] = data;
-				} else {
-					events = data;
-				}
-				if (events){
-					jQuery('#none').hide();
-					for (var i = 0; i < events.length; i++){
-						ev = events[i];
-						if (ev.EventTypeDescription == 'Private Use' || ev.StatusID == '1005'){
-							continue;
-						}
-						if (i!=0 && moment(ev.TimeEventStart).format('ddd') == lastDay.format('ddd')){
-							ev.date = '';
-						} else {
-							ev.date = moment(ev.TimeEventStart).format(dateFormat);
-							lastDay = moment(ev.TimeEventStart);
-						}
-						ev.TimeEventStart = moment(ev.TimeEventStart).format(outFormat);
-						ev.TimeEventEnd = moment(ev.TimeEventEnd).format(outFormat);
-						ev.EventName = ev.EventName.toProperCase();
-						eventsList.append(Mustache.render(template,ev));
-					}
-				} else {
-					jQuery('#none').show();
-				}
+			} else {
+				events = data;
 			}
+			if (events){
+				jQuery('#none').hide();
+				for (var i = 0; i < events.length; i++){
+					ev = events[i];
+					if (ev.EventTypeDescription == 'Private Use' || ev.StatusID == '1005'){
+						continue;
+					}
+					if (i!=0 && numEvents > 0 && moment(ev.TimeEventStart).format('ddd') == lastDay.format('ddd')){
+						ev.date = '';
+						ev.daylist = '';
+					} else {
+						ev.daylist = moment(ev.TimeEventStart).format('dddd');
+						ev.date = moment(ev.TimeEventStart).format(dateFormat);
+						lastDay = moment(ev.TimeEventStart);
+					}
+					ev.day = moment(ev.TimeEventStart).format('dddd');
+					ev.TimeEventStart = moment(ev.TimeEventStart).format(outFormat);
+					ev.TimeEventEnd = moment(ev.TimeEventEnd).format(outFormat);
+					ev.EventName = ev.EventName.toProperCase();
+					eventsList.append(Mustache.render(template,ev));
+					numEvents++;
+				}
+			} else {
+				jQuery('#none').show();
+			}
+			function sortEvents(eventsList){
+				var events = eventsList.find('li').not("#none");
+				if (events.length > 0){
+					events.each(function(i,el){
+						var day = jQuery(el).data('day');
+						var others = jQuery('li[data-day="'+day+'"]');
+						others.sort(sort);
+					});
+				}
+
+				function sort(a,b){
+					a = jQuery(a);
+					b = jQuery(b);
+					var aStart = a.data('time');
+					var bStart = b.data('time');
+
+					var compare = moment(aStart,"h:mm A").isAfter(moment(bStart,"h:mm A"));
+					if (compare){
+						a.data('time',bStart);
+						b.data('time',aStart);
+						a.find('div.title').swap(b.find('div.title'));
+					}
+					return 1;
+				}
+				//events.detach().appendTo(eventsList);
+			}
+			sortEvents(eventsList);
 		}
-		updateEventsForWeek();
-	</script>
-	<script src="js/scripts.js"></script>
-	
+	}
+	updateEventsForWeek();
+</script>
+
+
 </body>
 </html>
