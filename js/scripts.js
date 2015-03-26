@@ -125,7 +125,7 @@ function updateEventsByEmsID(id){
 					eventNow = true;
 				}
 
-				if (now.isAfter(moment(ev.TimeEventEnd))){ //event has already happened
+				if (now.isAfter(moment(ev.TimeEventEnd)) || ev.StatusID == '1005'){ //event has already happened or was deleted
 					continue;
 				}
 				jQuery("#none").hide();
